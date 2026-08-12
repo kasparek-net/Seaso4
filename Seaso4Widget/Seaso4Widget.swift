@@ -372,10 +372,18 @@ struct SeasonWidgetProvider: TimelineProvider {
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<SeasonWidgetEntry>) -> Void) {
+        // Pre-computed entry per midnight: WidgetKit switches entries exactly on
+        // schedule, unlike .after refreshes which the system defers for budget.
         let now = Date()
-        let entry = makeEntry(date: now)
-        let nextUpdate = Calendar.current.startOfDay(for: Calendar.current.date(byAdding: .day, value: 1, to: now)!)
-        completion(Timeline(entries: [entry], policy: .after(nextUpdate)))
+        let calendar = Calendar.current
+        let startOfToday = calendar.startOfDay(for: now)
+        var entries = [makeEntry(date: now)]
+        for dayOffset in 1...7 {
+            if let midnight = calendar.date(byAdding: .day, value: dayOffset, to: startOfToday) {
+                entries.append(makeEntry(date: midnight))
+            }
+        }
+        completion(Timeline(entries: entries, policy: .atEnd))
     }
 
     private func makeEntry(date: Date) -> SeasonWidgetEntry {
