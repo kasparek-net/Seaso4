@@ -1064,23 +1064,7 @@ struct ContentView: View {
                 Text("iOS may delay widget updates to save battery.")
             }
 
-            Section {
-                VStack(alignment: .leading, spacing: 6) {
-                    Text("Created by Jakub Kasparek")
-                        .font(.subheadline.weight(.semibold))
-                    Text("Based in 🇨🇿")
-                        .font(.footnote)
-                        .foregroundColor(.secondary)
-                    if let url = URL(string: "https://kasparek.net") {
-                        Link(destination: url) {
-                            Label("kasparek.net", systemImage: "link")
-                                .font(.footnote)
-                        }
-                    }
-                }
-            } header: {
-                Text("About")
-            }
+            KasparekSignatureSection()
         }
         .formStyle(.grouped)
         .navigationTitle("Settings")
