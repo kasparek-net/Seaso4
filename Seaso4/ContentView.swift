@@ -693,6 +693,9 @@ struct ContentView: View {
         .onChange(of: showDaylight) { _, newValue in
             syncWidgetSettingsToStore(showDaylightOverride: newValue)
             AppGroup.refreshWidgets()
+            if newValue, effectiveLocationMode == .automatic {
+                locationManager.requestLocationIfNeeded()
+            }
         }
         .onAppear {
             selectedSeason = currentSeason
